@@ -19,9 +19,9 @@ def get_session():
 def download_site(url):
     session = get_session()
     with session.get(url) as response:
-        print(f"Read {json.loads(response.text)} from {url}")
-        counts = Counts(**response[0]['counts'])
-        user = User(counts, **response)
+        item = json.loads(response.text)[0]
+        counts = Counts(**item['counts'])
+        user = User(counts, **item)
         db_session.add(counts)
         db_session.add(user)
         db_session.commit()
@@ -32,8 +32,8 @@ def download_all_sites(sites):
 
 if __name__ == "__main__":
     url = "https://api.gapo.vn/main/v1.0/user?id=%d"
-    limit = 5
-    sites = [ url %(i + 1) for i in range(0, limit) ]
+    limit = 39507
+    sites = [ url %(i + 1) for i in range(30000, limit) ]
 
     start_time = time.time()
     download_all_sites(sites)
